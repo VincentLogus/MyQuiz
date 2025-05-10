@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz App</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom right, #dbeafe, #eff6ff);
+      color: #1e293b;
+      margin: 0;
+      padding: 1rem;
+      transition: all 0.4s ease-in-out;
+    }
+    .question-container {
+      max-width: 700px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      text-align: center;
+      animation: fadeIn 0.6s ease-in;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(20px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+    .button {
+      display: block;
+      background: linear-gradient(to right, #60a5fa, #3b82f6);
+      color: white;
+      padding: 1rem;
+      border-radius: 12px;
+      margin: 0.5rem 0;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: transform 0.2s ease, opacity 0.3s ease;
+    }
+    .button:hover {
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
+    .feedback {
+      margin-top: 1rem;
+      font-size: 1.4rem;
+      font-weight: bold;
+    }
+    .correct-feedback {
+      color: green;
+      animation: fadeIn 0.3s ease-in;
+    }
+    .incorrect-feedback {
+      color: red;
+      animation: fadeIn 0.3s ease-in;
+    }
+    footer {
+      margin-top: 2rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #334155;
+    }
+    .share-icons i {
+      font-size: 1.8rem;
+      margin: 0 10px;
+      cursor: pointer;
+      color: #1e3a8a;
+    }
+    .back-btn, .lang-toggle {
+      background: none;
+      color: #1e40af;
+      border: 1px solid #1e3a8a;
+      border-radius: 8px;
+      padding: 0.3rem 0.6rem;
+      margin: 0.5rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<div class="question-container" id="app"></div>
+<footer>
+  Developer: Horizon | Modified: 10/5/2025 <br />
+  <button onclick="showCoCo()">☕ Support Me a CocoDrink</button>
+</footer>
+
+<script>
+const QUESTIONS = [
+  {
+    question: { th: "ข้อใดคือดาวเคราะห์?", en: "Which one is a planet?" },
+    choices: [
+      { th: "ดวงจันทร์", en: "Moon", correct: false },
+      { th: "ดาวอังคาร", en: "Mars", correct: true },
+      { th: "ดวงอาทิตย์", en: "Sun", correct: false },
+      { th: "กล้องโทรทรรศน์", en: "Telescope", correct: false }
+    ]
+  },
+  {
+    question: { th: "ข้อใดคือแร่ธาตุ?", en: "Which one is an element?" },
+    choices: [
+      { th: "ดิน", en: "Soil", correct: false },
+      { th: "มังกร", en: "Dragon", correct: false },
+      { th: "เพชร", en: "Diamond", correct: true },
+      { th: "แม่", en: "Mom", correct: false }
+    ]
+  }
+];
+
+// carry from github
+const victorySound = new Audio("https://raw.githubusercontent.com/VincentLogus/MyQuiz/main/yes.mp3");
+const loseSound = new Audio("https://raw.githubusercontent.com/VincentLogus/MyQuiz/main/No.mp3");
+
+let lang = 'th';
+let currentIndex = 0;
+let score = 0;
+
+function renderQuestion() {
+  const app = document.getElementById("app");
+  const q = QUESTIONS[currentIndex];
+  const qNumber = currentIndex + 1;
+  const qTotal = QUESTIONS.length;
+  app.innerHTML = `
+    <div>
+      <div style="display:flex; justify-content:space-between; align-items: center;">
+        <span>${qNumber}/${qTotal}</span>
+        <button class="lang-toggle" onclick="toggleLang()">${lang === 'th' ? 'EN' : 'TH'}</button>
+      </div>
+      <h2 style="margin-bottom: 1.5rem;">${q.question[lang]}</h2>
+      <div id="choices">
+        ${q.choices.map((c, i) => `<button class="button" onclick="choose(this, ${c.correct})">${c[lang]}</button>`).join('')}
+      </div>
+      <div id="feedback"></div>
+    </div>
+  `;
+}
+
+function choose(button, isCorrect) {
+  const feedback = document.getElementById("feedback");
+  document.querySelectorAll(".button").forEach(b => b.disabled = true);
+  if (isCorrect) {
+    score++;
+    feedback.innerHTML = `<div class='feedback correct-feedback'>${lang === 'th' ? '✔ ถูกต้อง!' : '✔ Correct!'}</div>`;
+    victorySound.play().then(() => {
+  console.log("Playing success");
+}).catch(err => {
+  console.error("Audio failed:", err);
+});
+  } else {
+    feedback.innerHTML = `<div class='feedback incorrect-feedback'>${lang === 'th' ? '✖ ผิด' : '✖ Incorrect'}</div>`;
+    loseSound.play();
+  }
+  setTimeout(() => {
+    currentIndex++;
+    if (currentIndex < QUESTIONS.length) {
+      renderQuestion();
+    } else {
+      showResult();
+    }
+  }, 2000);
+}
+
+function toggleLang() {
+  lang = lang === 'th' ? 'en' : 'th';
+  renderQuestion();
+}
+
+function getGrade() {
+  const percent = (score / QUESTIONS.length) * 100;
+  if (percent === 100) return 'A';
+  if (percent >= 80) return 'B';
+  if (percent >= 50) return 'C';
+  return 'D';
+}
+
+function showResult() {
+  const app = document.getElementById("app");
+  app.innerHTML = `
+    <button class="back-btn" onclick="restart()">⬅ ${lang === 'th' ? 'กลับ' : 'Back'}</button>
+    <h2>${lang === 'th' ? 'ผลลัพธ์ของคุณ' : 'Your Result'}</h2>
+    <p>${lang === 'th' ? 'คะแนน: ' : 'Score: '}${score} / ${QUESTIONS.length}</p>
+    <p>${lang === 'th' ? 'เกรด: ' : 'Grade: '}${getGrade()}</p>
+    <div class="share-icons">
+      <i class="fab fa-facebook" onclick="shareFacebook()" title="Share on Facebook"></i>
+      <i class="fab fa-line" onclick="shareLine()" title="Share on Line"></i>
+      <i class="fab fa-instagram" onclick="shareInstagram()" title="Share on Instagram"></i>
+    </div>
+  `;
+}
+
+function restart() {
+  currentIndex = 0;
+  score = 0;
+  renderQuestion();
+}
+
+function showCoCo() {
+  const app = document.getElementById("app");
+  app.innerHTML = `
+    <button class="back-btn" onclick="restart()">⬅ ${lang === 'th' ? 'กลับ' : 'Back'}</button>
+    <h2>☕ Support Me a CocoDrink</h2>
+    <p>Developer: Horizon</p>
+    <p>Modified: 10/5/2025</p>
+    <p>Hi! I'm a passionate web developer who enjoys creating interactive educational tools. Your support means a lot!</p>
+	<p>อย่าลืมแวะมาเล่นทายปัญหากับเราอีกน้าา. สนับสนุนโกโก้เย็นให้เราได้ที่ TTB-7232015854 ณณฐพนธกร </p>
+  `;
+}
+
+function shareFacebook() {
+  const url = encodeURIComponent(window.location.href);
+  const text = encodeURIComponent(`${lang === 'th' ? 'ฉันได้คะแนน' : 'I scored'} ${score}/${QUESTIONS.length} (${getGrade()})`);
+  window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`, '_blank');
+}
+
+function shareLine() {
+  const text = encodeURIComponent(`${lang === 'th' ? 'ฉันได้คะแนน' : 'I scored'} ${score}/${QUESTIONS.length} (${getGrade()})\n${window.location.href}`);
+  window.open(`https://social-plugins.line.me/lineit/share?text=${text}`, '_blank');
+}
+
+function shareInstagram() {
+  alert(lang === 'th' 
+    ? 'Instagram ยังไม่รองรับการแชร์ผ่านเว็บโดยตรง กรุณาคัดลอกผลลัพธ์และแชร์ด้วยตนเอง' 
+    : 'Instagram does not support direct web sharing. Please copy your result and share it manually.');
+}
+
+renderQuestion();
+</script>
+</body>
+</html>
