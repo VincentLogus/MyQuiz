@@ -112,6 +112,8 @@ const QUESTIONS = [
 // carry from github
 const victorySound = new Audio("https://raw.githubusercontent.com/VincentLogus/MyQuiz/main/yes.mp3");
 const loseSound = new Audio("https://raw.githubusercontent.com/VincentLogus/MyQuiz/main/No.mp3");
+const goodScoreMusic = new Audio("https://raw.githubusercontent.com/VincentLogus/MyQuiz/main/Victory_r.mp3");
+
 
 let lang = 'th';
 let currentIndex = 0;
@@ -177,6 +179,12 @@ function getGrade() {
 
 function showResult() {
   const app = document.getElementById("app");
+  const percent = (score / QUESTIONS.length) * 100;
+
+  if (percent >= 80) {
+    goodScoreMusic.play();
+  }
+
   app.innerHTML = `
     <button class="back-btn" onclick="restart()">⬅ ${lang === 'th' ? 'กลับ' : 'Back'}</button>
     <h2>${lang === 'th' ? 'ผลลัพธ์ของคุณ' : 'Your Result'}</h2>
@@ -189,6 +197,7 @@ function showResult() {
     </div>
   `;
 }
+
 
 function restart() {
   currentIndex = 0;
