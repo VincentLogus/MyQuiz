@@ -5,7 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Quiz App</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-TCRVE07MT7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-TCRVE07MT7');
+</script>
+	
   <style>
+	  
     body {
       font-family: 'Segoe UI', sans-serif;
       background: linear-gradient(to bottom right, #dbeafe, #eff6ff);
@@ -81,6 +93,7 @@
   </style>
 </head>
 <body>
+
 <div class="question-container" id="app"></div>
 <footer>
   Developer: Horizon | Modified: 10/5/2025 <br />
@@ -90,21 +103,56 @@
 <script>
 const QUESTIONS = [
   {
-    question: { th: "ข้อใดคือดาวเคราะห์?", en: "Which one is a planet?" },
+    question: { th: "ข้อใดจำเป็นต้องใช้ความเย็นรักษา?", en: "Which answer should be apply cold compression?" },
     choices: [
-      { th: "ดวงจันทร์", en: "Moon", correct: false },
-      { th: "ดาวอังคาร", en: "Mars", correct: true },
-      { th: "ดวงอาทิตย์", en: "Sun", correct: false },
-      { th: "กล้องโทรทรรศน์", en: "Telescope", correct: false }
+      { th: "กล้ามเนื้อเกร็งเป็นก้อน", en: "Chronic muscle spasm", correct: false },
+      { th: "ผังผืดฉีกขาดฉับพลัน", en: "Recent Fascia Tear", correct: true },
+      { th: "กล้ามเนื้อฉีกขาดมา 3 อาทิตย์", en: "3rd-week muscle tear", correct: false },
+      { th: "ปวดบิดในลำไส้", en: "Colicky pain", correct: false }
     ]
   },
   {
-    question: { th: "ข้อใดคือแร่ธาตุ?", en: "Which one is an element?" },
+    question: { th: "นอนตกหมอน ตื่นเช้ามามีอาการเจ็บ เอามือจับแล้วร้อนผ่าวบริเวณไหล่ ควรใช้อะไร?", en: "You woke up with neck pain, can't turn your head to either side, your shoulder feels hot to the touch, what should you do?" },
     choices: [
-      { th: "ดิน", en: "Soil", correct: false },
-      { th: "มังกร", en: "Dragon", correct: false },
-      { th: "เพชร", en: "Diamond", correct: true },
-      { th: "แม่", en: "Mom", correct: false }
+      { th: "ใช้เย็น", en: "application of cold", correct: true },
+      { th: "ใช้ร้อน", en: "application of hot", correct: false }
+    ]
+  },
+  {
+    question: { th: "เข้ารับการเจาะเลือดแล้วรู้สึกระบม ควรทำอย่างไร?", en: "You went to do the blood test and feel sore over the needle penetrated area, what should you do?" },
+    choices: [
+      { th: "ใช้ประคบความเย็น และงอข้อศอกให้สุด", en: "application of cold and bend your elbow", correct: false },
+      { th: "ใช้ประคบความเย็น และไม่งอข้อศอก", en: "application of cold without flexing your elbow", correct: true },
+      { th: "ใช้ร้อน", en: "application of hot", correct: false }
+    ]
+  },
+  {
+    question: { th: "เข้ารับการผ่าฟันคุด เมื่อปวดและบวมควรทำอย่างไร?", en: "ํYou went to dentist to remove your molar, it hurts and swelling, what should you do?" },
+    choices: [
+      { th: "ใช้เย็น", en: "application of cold", correct: true },
+      { th: "ใช้ร้อน", en: "application of hot", correct: false }
+    ]
+  },
+  {
+    question: { th: "ยกของหนัก แล้วแปร๊ปที่หลังเพราะหมอนรองกระดูกกดทับเส้นประสาท ควรใช้อะไร?", en: "ํYou have been lifting heavy things, now your back hurt due to Hearniated Disk. What should you do?" },
+    choices: [
+      { th: "ใช้เย็น", en: "application of cold", correct: true },
+      { th: "ใช้ร้อน", en: "application of hot", correct: false }
+    ]
+  },
+  {
+    question: { th: "ทำงานหน้าคอมจนคอและหลังตึงไปหมด ควรทำอย่างไร?", en: "ํYou have been working non-stop at the office. Your neck and back is in serious tension pain. What can sooth out the problem?" },
+    choices: [
+      { th: "ใช้เย็น", en: "application of cold", correct: false },
+      { th: "ใช้ร้อน", en: "application of hot", correct: true }
+    ]
+  },
+  {
+    question: { th: "เป็นตระคริวที่ขาหลังจากนั่งทำงานเป็นเวลานาน?", en: "ํYou have been working non-stop at the office. Your neck and back is in serious tension pain. What can sooth out the problem?" },
+    choices: [
+      { th: "ใช้เย็น", en: "application of cold", correct: false },
+      { th: "ใช้ร้อน", en: "application of hot", correct: true },
+      { th: "ลองค้นหากันยากายภาพใกล้บ้าน และให้ผู้ชำนาญดูแล", en: "Find nearest Kanya Physical Therapy Clinic and get help from experienced therapist", correct: true }
     ]
   }
 ];
@@ -128,7 +176,7 @@ function renderQuestion() {
     <div>
       <div style="display:flex; justify-content:space-between; align-items: center;">
         <span>${qNumber}/${qTotal}</span>
-        <button class="lang-toggle" onclick="toggleLang()">${lang === 'th' ? 'EN' : 'TH'}</button>
+        <button class="lang-toggle" onclick="toggleLang()">${lang === 'th' ? 'to EN' : 'TH'}</button>
       </div>
       <h2 style="margin-bottom: 1.5rem;">${q.question[lang]}</h2>
       <div id="choices">
@@ -191,10 +239,15 @@ function showResult() {
     <p>${lang === 'th' ? 'คะแนน: ' : 'Score: '}${score} / ${QUESTIONS.length}</p>
     <p>${lang === 'th' ? 'เกรด: ' : 'Grade: '}${getGrade()}</p>
     <div class="share-icons">
-      <i class="fab fa-facebook" onclick="shareFacebook()" title="Share on Facebook"></i>
-      <i class="fab fa-line" onclick="shareLine()" title="Share on Line"></i>
-      <i class="fab fa-instagram" onclick="shareInstagram()" title="Share on Instagram"></i>
-    </div>
+  <i class="fab fa-facebook" onclick="shareFacebook()" title="Share on Facebook"></i>
+  <i class="fab fa-line" onclick="shareLine()" title="Share on Line"></i>
+  <i class="fab fa-instagram" onclick="shareInstagram()" title="Share on Instagram"></i>
+</div>
+<p style="margin-top: 1.5rem;">
+  <a href="https://www.facebook.com/kanyaclinic.official" target="_blank" style="color: #2563eb; font-weight: bold; text-decoration: underline;">
+    📞 ${lang === 'th' ? 'ติดต่อกันยาคลินิก' : 'Contact Kanya Clinic'}
+  </a>
+</p>
   `;
 }
 
@@ -213,7 +266,8 @@ function showCoCo() {
     <p>Developer: Horizon</p>
     <p>Modified: 10/5/2025</p>
     <p>Hi! I'm a passionate web developer who enjoys creating interactive educational tools. Your support means a lot!</p>
-	<p>อย่าลืมแวะมาเล่นทายปัญหากับเราอีกน้าา. สนับสนุนโกโก้เย็นให้เราได้ที่ TTB-7232015854 ณณฐพนธกร </p>
+	<p>อย่าลืมแวะมาเล่นทายปัญหากับเราอีกน้าา. สนับสนุนโกโก้เย็นให้เราได้ที่ กันยาสาขาสิรินธร(สำนักงานใหญ่)</p>
+	<p>Royalty free music:"CALL TO ADVENTURE" by Scott Buckley 🇦🇺🇸🇪<p>
   `;
 }
 
